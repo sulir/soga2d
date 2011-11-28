@@ -34,21 +34,41 @@ import java.util.List;
  */
 public class GraphicBoard {
     private GraphicComponent component;
-    private List<GraphicObject> objects = new ArrayList<GraphicObject>();
+    private List<GraphicObject> items = new ArrayList<GraphicObject>();
     
     public GraphicBoard(GraphicComponent component) {
         this.component = component;
     }
     
     void paint(Graphics2D g) {
-        for (GraphicObject object : objects) {
+        for (GraphicObject object : items) {
             object.paint((Graphics2D)g.create(object.getX(), object.getY(), object.getWidth(), object.getHeight()));
         }
     }
     
     public void addObject(GraphicObject object) {
-        object.assignBoard(this);
-        objects.add(object);
+        if (!items.contains(object)) {
+            object.assignBoard(this);
+            items.add(object);
+        }
+    }
+    
+    void moveInFrontOf(GraphicObject object, GraphicObject inFrontOfWhat) {
+        items.remove(object);
+        int index = items.indexOf(inFrontOfWhat);
+        
+        if (index != -1)
+            items.add(index, object);
+    }
+    
+    void sendToBackground(GraphicObject object) {
+        items.remove(object);
+        items.add(0, object);
+    }
+    
+    void bringToForeground(GraphicObject object) {
+        items.remove(object);
+        items.add(object);
     }
     
     public void notifyChanged() {

@@ -80,7 +80,28 @@ public abstract class GraphicObject {
         this.y = y;
         update();
     }
-
+    
+    public void moveBy(int deltaX, int deltaY) {
+        x += deltaX;
+        y += deltaY;
+        update();
+    }
+    
+    public void moveInFrontOf(GraphicObject what) {
+        board.moveInFrontOf(this, what);
+        update();
+    }
+    
+    public void sendToBackground() {
+        board.sendToBackground(this);
+        update();
+    }
+    
+    public void bringToForeground() {
+        board.bringToForeground(this);
+        update();
+    }
+    
     private void update() {
         if (board != null)
             board.notifyChanged();
