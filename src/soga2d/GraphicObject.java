@@ -24,6 +24,7 @@
 package soga2d;
 
 import java.awt.Graphics2D;
+import soga2d.events.MouseClickListener;
 
 /**
  *
@@ -35,6 +36,7 @@ public abstract class GraphicObject {
     protected int x;
     protected int y;
     private GraphicBoard board;
+    private MouseClickListener mouseClickListener;
     
     public GraphicObject() {
         this(0, 0, 32, 32);
@@ -107,6 +109,15 @@ public abstract class GraphicObject {
             board.bringToForeground(this);
        
         update();
+    }
+    
+    public void setMouseClickListener(MouseClickListener listener) {
+        mouseClickListener = listener;
+    }
+    
+    void mouseClicked() {
+        if (mouseClickListener != null)
+            mouseClickListener.onClick();
     }
     
     private void update() {

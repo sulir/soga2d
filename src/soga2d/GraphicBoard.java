@@ -24,6 +24,7 @@
 package soga2d;
 
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +90,19 @@ public class GraphicBoard {
     void bringToForeground(GraphicObject object) {
         items.remove(object);
         items.add(object);
+    }
+    
+    void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        
+        for (GraphicObject object : items) {
+            if (x >= object.getX() && x < object.getX() + object.getWidth()
+                    && y >= object.getY() && y < object.getY() + object.getHeight()) {
+                object.mouseClicked();
+                break;
+            }
+        }
     }
     
     void repaintAll() {

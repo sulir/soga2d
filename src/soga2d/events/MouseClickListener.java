@@ -21,46 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package soga2d;
-
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JPanel;
+package soga2d.events;
 
 /**
- * The JPanel replacement containing the graphic board.
- * 
+ *
  * @author Matúš Sulír
  */
-public class GraphicPanel extends JPanel implements GraphicComponent {
-    GraphicBoard board;
-    
-    public GraphicPanel() {
-        board = new GraphicBoard(this);
-        
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                board.mouseClicked(e);
-            }
-        });
-    }
-    
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        board.paint((Graphics2D)g);
-    }
-    
-    public GraphicBoard getBoard() {
-        return board;
-    }
-    
-    @Override
-    public void repaintAll() {
-        repaint();
-    }
+public interface MouseClickListener {
+    void onClick();
 }
