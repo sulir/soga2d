@@ -23,6 +23,7 @@
  */
 package soga2d;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
@@ -37,6 +38,7 @@ import java.awt.image.BufferedImage;
 public class Text extends GraphicObject {
     String text;
     Font font = new Font("Arial", Font.PLAIN, 15);
+    Color color = Color.BLACK;
     
     public Text() {
         text = "";
@@ -50,6 +52,8 @@ public class Text extends GraphicObject {
     
     @Override
     public void paint(Graphics2D g) {
+        g.setFont(font);
+        g.setColor(color);
         g.drawString(text, 0, height);
     }
     
@@ -64,6 +68,10 @@ public class Text extends GraphicObject {
     public void setFont(Font font) {
         this.font = font;
         updateSize();
+    }
+    
+    public void setColor(Color color) {
+        this.color = color;
     }
     
     private void updateSize() {

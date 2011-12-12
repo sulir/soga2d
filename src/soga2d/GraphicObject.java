@@ -89,24 +89,24 @@ public abstract class GraphicObject {
     }
     
     public void moveInFrontOf(GraphicObject what) {
-        if (board != null) {
+        if (board != null)
             board.moveInFrontOf(this, what);
-            update();
-        }
+        
+        update();
     }
     
     public void sendToBackground() {
-        if (board != null) {
+        if (board != null)
             board.sendToBackground(this);
-            update();
-        }
+        
+        update();
     }
     
     public void bringToForeground() {
-        if (board != null) {
+        if (board != null)
             board.bringToForeground(this);
-            update();
-        }
+       
+        update();
     }
     
     private void update() {
