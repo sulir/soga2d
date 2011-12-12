@@ -35,6 +35,7 @@ import java.util.List;
 public class GraphicBoard {
     private GraphicComponent component;
     private List<GraphicObject> items = new ArrayList<GraphicObject>();
+    private boolean locked = false;
     
     public GraphicBoard(GraphicComponent component) {
         this.component = component;
@@ -58,6 +59,20 @@ public class GraphicBoard {
             object.assignBoard(null);
     }
     
+    public void clear() {
+        items.clear();
+        repaintAll();
+    }
+    
+    public void lock() {
+        locked = true;
+    }
+    
+    public void unlock() {
+        locked = false;
+        repaintAll();
+    }
+    
     void moveInFrontOf(GraphicObject object, GraphicObject inFrontOfWhat) {
         items.remove(object);
         int index = items.indexOf(inFrontOfWhat);
@@ -76,7 +91,8 @@ public class GraphicBoard {
         items.add(object);
     }
     
-    public void notifyChanged() {
-        component.notifyChanged();
+    void repaintAll() {
+        if (!locked)
+            component.repaintAll();
     }
 }

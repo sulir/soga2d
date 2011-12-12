@@ -28,5 +28,5 @@ package soga2d;
  * @author Matúš Sulír
  */
 public interface GraphicComponent {
-    void notifyChanged();
+    void repaintAll();
 }

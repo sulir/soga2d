@@ -51,7 +51,7 @@ public class GraphicPanel extends JPanel implements GraphicComponent {
     }
     
     @Override
-    public void notifyChanged() {
+    public void repaintAll() {
         repaint();
     }
 }

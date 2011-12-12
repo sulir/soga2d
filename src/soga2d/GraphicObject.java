@@ -111,6 +111,6 @@ public abstract class GraphicObject {
     
     private void update() {
         if (board != null)
-            board.notifyChanged();
+            board.repaintAll();
     }
 }
