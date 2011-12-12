@@ -53,6 +53,11 @@ public class GraphicBoard {
         }
     }
     
+    public void removeObject(GraphicObject object) {
+        if (items.remove(object))
+            object.assignBoard(null);
+    }
+    
     void moveInFrontOf(GraphicObject object, GraphicObject inFrontOfWhat) {
         items.remove(object);
         int index = items.indexOf(inFrontOfWhat);
