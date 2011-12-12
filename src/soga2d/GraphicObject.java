@@ -51,6 +51,7 @@ public abstract class GraphicObject {
 
     void assignBoard(GraphicBoard board) {
         this.board = board;
+        update();
     }
     
     public int getWidth() {
