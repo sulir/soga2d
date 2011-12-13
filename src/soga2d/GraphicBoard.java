@@ -24,6 +24,7 @@
 package soga2d;
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +104,11 @@ public class GraphicBoard {
                 break;
             }
         }
+    }
+    
+    void keyPressed(KeyEvent e) {
+        for (GraphicObject object : items)
+            object.keyPressed(e);
     }
     
     void repaintAll() {

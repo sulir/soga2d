@@ -24,6 +24,8 @@
 package soga2d;
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import soga2d.events.KeyPressListener;
 import soga2d.events.MouseClickListener;
 
 /**
@@ -37,6 +39,7 @@ public abstract class GraphicObject {
     protected int y;
     private GraphicBoard board;
     private MouseClickListener mouseClickListener;
+    private KeyPressListener keyPressListener;
     
     public GraphicObject() {
         this(0, 0, 32, 32);
@@ -115,9 +118,18 @@ public abstract class GraphicObject {
         mouseClickListener = listener;
     }
     
+    public void setKeyPressListener(KeyPressListener listener) {
+        keyPressListener = listener;
+    }
+    
     void mouseClicked() {
         if (mouseClickListener != null)
             mouseClickListener.onClick();
+    }
+    
+    void keyPressed(KeyEvent e) {
+        if (keyPressListener != null)
+            keyPressListener.onKeyPress(e);
     }
     
     private void update() {
