@@ -39,6 +39,9 @@ import javax.swing.JPanel;
 public class GraphicPanel extends JPanel implements GraphicComponent {
     GraphicBoard board;
     
+    /**
+     * The default constructor.
+     */
     public GraphicPanel() {
         board = new GraphicBoard(this);
         
@@ -57,6 +60,10 @@ public class GraphicPanel extends JPanel implements GraphicComponent {
         });
     }
     
+    /**
+     * Called by Swing when the component needs to be repainted.
+     * @param g the graphical object which can be painted on
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -64,10 +71,17 @@ public class GraphicPanel extends JPanel implements GraphicComponent {
         board.paint((Graphics2D)g);
     }
     
+    /**
+     * Returns the associated graphic board.
+     * @return the board
+     */
     public GraphicBoard getBoard() {
         return board;
     }
     
+    /**
+     * Repaints the whole JPanel.
+     */
     @Override
     public void repaintAll() {
         repaint();

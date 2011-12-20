@@ -32,7 +32,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
- *
+ * The graphical object containing a textual string.
  * @author Matúš Sulír
  */
 public class Text extends GraphicObject {
@@ -40,16 +40,27 @@ public class Text extends GraphicObject {
     Font font = new Font("Arial", Font.PLAIN, 15);
     Color color = Color.BLACK;
     
+    /**
+     * Constructs and empty text.
+     */
     public Text() {
         text = "";
         updateSize();
     }
     
+    /**
+     * Constructs an object containing the given text.
+     * @param text the string
+     */
     public Text(String text) {
         this.text = text;
         updateSize();
     }
     
+    /**
+     * Paints the text.
+     * @param g the graphics to draw on
+     */
     @Override
     public void paint(Graphics2D g) {
         g.setFont(font);
@@ -57,23 +68,43 @@ public class Text extends GraphicObject {
         g.drawString(text, 0, height);
     }
     
+    /**
+     * Returns the current text.
+     * @return the text
+     */
     public String getText() {
         return text;
     }
     
+    /**
+     * Sets a new text to display.
+     * @param text the new text
+     */
     public void setText(String text) {
         this.text = text;
     }
     
+    /**
+     * Sets the font used when drawing the text.
+     * @param font the new font
+     */
     public void setFont(Font font) {
         this.font = font;
         updateSize();
     }
     
+    /**
+     * Sets the text foreground color.
+     * @param color the new color
+     */
     public void setColor(Color color) {
         this.color = color;
     }
     
+    /**
+     * Computes and updates the width and height of the graphic object
+     * according to the actual text size.
+     */
     private void updateSize() {
         Graphics2D g = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
         

@@ -24,9 +24,16 @@
 package soga2d;
 
 /**
- *
+ * The interface which must be implemented by all classes bound to a GraphicBoard.
+ * 
+ * The GraphicBoard is "bound" to a Swing, AWT or other component which means
+ * its contents are painted on this component whenever it is needed.
  * @author Matúš Sulír
  */
 public interface GraphicComponent {
+    
+    /**
+     * Repaints the whole component.
+     */
     void repaintAll();
 }

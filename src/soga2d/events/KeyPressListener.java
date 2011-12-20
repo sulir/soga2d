@@ -26,9 +26,14 @@ package soga2d.events;
 import java.awt.event.KeyEvent;
 
 /**
- *
+ * This interface should be implemented by object which want to receive
+ * key press events.
  * @author Matúš Sulír
  */
 public interface KeyPressListener {
+    /**
+     * Called when the user presses a key.
+     * @param e the key event
+     */
     void onKeyPress(KeyEvent e);
 }

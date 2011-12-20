@@ -39,16 +39,28 @@ public class GraphicBoard {
     private List<GraphicObject> items = new ArrayList<GraphicObject>();
     private boolean locked = false;
     
+    /**
+     * Constructs a graphic board bound to the GUI component.
+     * @param component the component to bind
+     */
     public GraphicBoard(GraphicComponent component) {
         this.component = component;
     }
     
+    /**
+     * Called when the bound component is being redrawn.
+     * @param g the graphics which can be drawn on
+     */
     void paint(Graphics2D g) {
         for (GraphicObject object : items) {
             object.paint((Graphics2D)g.create(object.getX(), object.getY(), object.getWidth(), object.getHeight()));
         }
     }
     
+    /**
+     * Adds an object to the board and draws it.
+     * @param object the graphical object to be added
+     */
     public void addObject(GraphicObject object) {
         if (!items.contains(object)) {
             object.assignBoard(this);
@@ -56,25 +68,49 @@ public class GraphicBoard {
         }
     }
     
+    /**
+     * Removes the object from the board.
+     * @param object the graphical object to be removed
+     */
     public void removeObject(GraphicObject object) {
         if (items.remove(object))
             object.assignBoard(null);
     }
     
+    /**
+     * Removes all objects from the board and clears it.
+     */
     public void clear() {
         items.clear();
         repaintAll();
     }
     
+    /**
+     * Causes the board not to be redrawn until unlock() is called.
+     * 
+     * This method can be used to speed up drawing of a large amount of objects
+     * at once. Another use is to avoid poor user experience when the objects
+     * are drawn one after another with a visible pause.
+     */
     public void lock() {
         locked = true;
     }
     
+    /**
+     * Unlocks and repaints the board.
+     * 
+     * @see #lock()
+     */
     public void unlock() {
         locked = false;
         repaintAll();
     }
     
+    /**
+     * Moves the object in front of an another object along the Z-axis.
+     * @param object the object to move
+     * @param inFrontOfWhat the object which will be behind the first one (this objet will not be moved)
+     */
     void moveInFrontOf(GraphicObject object, GraphicObject inFrontOfWhat) {
         items.remove(object);
         int index = items.indexOf(inFrontOfWhat);
@@ -83,16 +119,28 @@ public class GraphicBoard {
             items.add(index, object);
     }
     
+    /**
+     * Moves the object behind all other objects along the Z-axis.
+     * @param object the object to move
+     */
     void sendToBackground(GraphicObject object) {
         items.remove(object);
         items.add(0, object);
     }
     
+    /**
+     * Moves the object in front of all other objecs along the Z-axis.
+     * @param object the object to move
+     */
     void bringToForeground(GraphicObject object) {
         items.remove(object);
         items.add(object);
     }
     
+    /**
+     * Called by the bound component when a mouse click event occurred.
+     * @param e the mouse event object
+     */
     void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
@@ -106,11 +154,19 @@ public class GraphicBoard {
         }
     }
     
+    /**
+     * Called by the bound component when a key-press event occurred
+     * while the component had focus.
+     * @param e the key event object
+     */
     void keyPressed(KeyEvent e) {
         for (GraphicObject object : items)
             object.keyPressed(e);
     }
     
+    /**
+     * Repaints all objects on this board.
+     */
     void repaintAll() {
         if (!locked)
             component.repaintAll();

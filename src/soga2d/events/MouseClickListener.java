@@ -24,9 +24,13 @@
 package soga2d.events;
 
 /**
- *
+ * This interface should be implemented by object which want to receive
+ * mouse click events.
  * @author Matúš Sulír
  */
 public interface MouseClickListener {
+    /**
+     * Called when the user clicks on the object.
+     */
     void onClick();
 }
