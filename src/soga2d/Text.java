@@ -37,15 +37,14 @@ import java.awt.image.BufferedImage;
  */
 public class Text extends GraphicObject {
     String text;
-    Font font = new Font("Arial", Font.PLAIN, 15);
-    Color color = Color.BLACK;
+    Font font;
+    Color color;
     
     /**
      * Constructs and empty text.
      */
     public Text() {
-        text = "";
-        updateSize();
+        this("");
     }
     
     /**
@@ -53,7 +52,28 @@ public class Text extends GraphicObject {
      * @param text the string
      */
     public Text(String text) {
+        this(text, 0, 0);
+    }
+    
+    /**
+     * Constructs an object containing the given text.
+     * @param text the string
+     */
+    public Text(String text, int x, int y) {
+        this(text, x, y, new Font("Arial", Font.PLAIN, 15), Color.BLACK);
+    }
+    
+    /**
+     * Constructs an object containing the given text.
+     * @param text the string
+     */
+    public Text(String text, int x, int y, Font font, Color color) {
         this.text = text;
+        this.x = x;
+        this.y = y;
+        this.font = font;
+        this.color = color;
+        
         updateSize();
     }
     
