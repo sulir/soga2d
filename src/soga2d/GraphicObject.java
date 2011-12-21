@@ -182,7 +182,7 @@ public abstract class GraphicObject {
     
     /**
      * Registers a mouse click listener (can be only one).
-     * @param listener the listener
+     * @param listener the object which will react on mouse-clicks
      */
     public void setMouseClickListener(MouseClickListener listener) {
         mouseClickListener = listener;
@@ -190,7 +190,7 @@ public abstract class GraphicObject {
     
     /**
      * Registers a key press listener (can be only one).
-     * @param listener the listener
+     * @param listener the object which will react on key-presses
      */
     public void setKeyPressListener(KeyPressListener listener) {
         keyPressListener = listener;
@@ -207,10 +207,11 @@ public abstract class GraphicObject {
     /**
      * Called when the user pressed a key while the component bound to the
      * board had focus.
+     * @param event the key event object
      */
-    void keyPressed(KeyEvent e) {
+    void keyPressed(KeyEvent event) {
         if (keyPressListener != null)
-            keyPressListener.onKeyPress(e);
+            keyPressListener.onKeyPress(event);
     }
     
     /**

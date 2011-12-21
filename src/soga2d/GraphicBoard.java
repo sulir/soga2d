@@ -28,6 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import soga2d.events.KeyPressListener;
 
 /**
  * The container of all graphic objects.
@@ -38,6 +39,7 @@ public class GraphicBoard {
     private GraphicComponent component;
     private List<GraphicObject> items = new ArrayList<GraphicObject>();
     private boolean locked = false;
+    private KeyPressListener keyPressListener;
     
     /**
      * Constructs a graphic board bound to the GUI component.
@@ -107,6 +109,14 @@ public class GraphicBoard {
     }
     
     /**
+     * Registers a key press listener (can be only one).
+     * @param listener the listener
+     */
+    public void setKeyPressListener(KeyPressListener listener) {
+        keyPressListener = listener;
+    }
+    
+    /**
      * Moves the object in front of an another object along the Z-axis.
      * @param object the object to move
      * @param inFrontOfWhat the object which will be behind the first one (this objet will not be moved)
@@ -139,11 +149,11 @@ public class GraphicBoard {
     
     /**
      * Called by the bound component when a mouse click event occurred.
-     * @param e the mouse event object
+     * @param event the mouse event object
      */
-    void mouseClicked(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
+    void mouseClicked(MouseEvent event) {
+        int x = event.getX();
+        int y = event.getY();
         
         for (GraphicObject object : items) {
             if (x >= object.getX() && x < object.getX() + object.getWidth()
@@ -157,11 +167,13 @@ public class GraphicBoard {
     /**
      * Called by the bound component when a key-press event occurred
      * while the component had focus.
-     * @param e the key event object
+     * @param event the key event object
      */
-    void keyPressed(KeyEvent e) {
+    void keyPressed(KeyEvent event) {
+        keyPressListener.onKeyPress(event);
+        
         for (GraphicObject object : items)
-            object.keyPressed(e);
+            object.keyPressed(event);
     }
     
     /**
