@@ -177,7 +177,7 @@ public class GraphicBoard {
     }
     
     /**
-     * Repaints all objects on this board.
+     * Repaints the whole board.
      */
     void repaintAll() {
         if (!locked)

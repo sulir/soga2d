@@ -48,7 +48,7 @@ public class Picture extends GraphicObject {
     }
     
     /**
-     * Constructs a picure from a file.
+     * Constructs a picture from a file.
      * 
      * The width and height is computed automatically.
      * @param fileName the file to open
