@@ -35,8 +35,6 @@ import javax.imageio.ImageIO;
  * @author Matúš Sulír
  */
 public class Texture extends GraphicObject {
-    private BufferedImage resultImage;
-    
     /**
      * Constructs a texture from an image file, starting from the point [0, 0].
      * @param fileName the image file name
@@ -58,27 +56,13 @@ public class Texture extends GraphicObject {
      * @throws IOException if the image can not be loaded
      */
     public Texture(String fileName, int x, int y, int width, int height) throws IOException {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        super(x, y, width, height);
         
         BufferedImage loadedImage = ImageIO.read(GraphicObject.class.getClassLoader().getResource(fileName));
         TexturePaint texturePaint = new TexturePaint(loadedImage, new Rectangle(loadedImage.getWidth(null), loadedImage.getHeight(null)));
         
-        resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics = (Graphics2D) resultImage.getGraphics();
-        
-        graphics.setPaint(texturePaint);
-        graphics.fill(new Rectangle(x, y, width, height));
-    }
-
-    /**
-     * Paints the texture.
-     * @param g the graphics to paint on
-     */
-    @Override
-    public void paint(Graphics2D g) {
-        g.drawImage(resultImage, x, y, null);
+        Graphics2D g = getGraphics();
+        g.setPaint(texturePaint);
+        g.fill(new Rectangle(width, height));
     }
 }

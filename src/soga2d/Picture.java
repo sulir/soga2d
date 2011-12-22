@@ -23,8 +23,6 @@
  */
 package soga2d;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -33,8 +31,6 @@ import javax.imageio.ImageIO;
  * @author Matúš Sulír
  */
 public class Picture extends GraphicObject {
-    private Image image;
-    
     /**
      * Constructs a picture from a file.
      * 
@@ -61,18 +57,5 @@ public class Picture extends GraphicObject {
         this.y = y;
         
         image = ImageIO.read(GraphicObject.class.getClassLoader().getResource(fileName));
-        
-        width = image.getWidth(null);
-        height = image.getHeight(null);
-    }
-    
-    /**
-     * Paints the image on a Graphics2D object.
-     * @param g the graphical object
-     */
-    @Override
-    public void paint(Graphics2D g) {
-        if (image != null)
-            g.drawImage(image, 0, 0, null);
     }
 }

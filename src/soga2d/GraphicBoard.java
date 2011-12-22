@@ -55,7 +55,7 @@ public class GraphicBoard {
      */
     void paint(Graphics2D g) {
         for (GraphicObject object : items) {
-            object.paint((Graphics2D)g.create(object.getX(), object.getY(), object.getWidth(), object.getHeight()));
+            g.drawImage(object.getImage(), object.getX(), object.getY(), null);
         }
     }
     
@@ -170,7 +170,8 @@ public class GraphicBoard {
      * @param event the key event object
      */
     void keyPressed(KeyEvent event) {
-        keyPressListener.onKeyPress(event);
+        if (keyPressListener != null)
+            keyPressListener.onKeyPress(event);
         
         for (GraphicObject object : items)
             object.keyPressed(event);

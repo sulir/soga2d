@@ -24,29 +24,55 @@
 package soga2d;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import soga2d.events.KeyPressListener;
 import soga2d.events.MouseClickListener;
 
 /**
  * The graphic object is a rectangular item located on a graphic board, e.g. an
  * image or a text.
+ * 
+ * When subclassing this class:
+ * <ul>
+ * <li>Set the <code>x</code> and <code>y</code> properties if needed.</li>
+ * <li>Draw the appropriate content into the <code>image</code> property.</li>
+ * <li>Call the <code>repaint()</code> method after the each position, size or
+ * content change.</li>
+ * </ul>
+ * 
+ * <em>Note:</em> Calling <code>repaint()</code> in a constructor is unnecessary
+ * because there is no board associated with the object yet.
  * @author Matúš Sulír
  */
 public abstract class GraphicObject {
-    protected int width;
-    protected int height;
+    /**
+     * The internal bitmap image.
+     * 
+     * Contains also the width and height of this graphical object.
+     */
+    protected BufferedImage image;
+    
+    /**
+     * The x position on the board.
+     */
     protected int x;
+    
+    /**
+     * The y position on the board.
+     */
     protected int y;
+    
     private GraphicBoard board;
     private MouseClickListener mouseClickListener;
     private KeyPressListener keyPressListener;
     
     /**
-     * Constructs an object with x = 0, y = 0, width = 32 and height = 32.
+     * Constructs an object with x = 0, y = 0, width = 1 and height = 1.
      */
     public GraphicObject() {
-        this(0, 0, 32, 32);
+        this(0, 0, 1, 1);
     }
     
     /**
@@ -59,19 +85,38 @@ public abstract class GraphicObject {
     public GraphicObject(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        
+        createImage(width, height);
     }
     
     /**
-     * Called when the graphic board is being repainted.
-     * 
-     * The concrete object should paint its contents in this method. 
-     * @param g the Graphics2D object representing the area where the object
-     * is located. The coordinates x = 0 and y = 0 represent the top-left point
-     * of the object.
+     * Initializes the internal image to an empty one (containing only
+     * transparent pixels).
+     * @param width the image width
+     * @param height the image height
      */
-    public abstract void paint(Graphics2D g);
+    protected final void createImage(int width, int height) {
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    }
+    
+    /**
+     * Returns the Graphics2D object from the internal image.
+     * 
+     * This is a utility method used when subclasses want to draw on the image.
+     * @return the Graphics2D object
+     */
+    protected Graphics2D getGraphics() {
+        return (Graphics2D) image.getGraphics();
+    }
+    
+    /**
+     * Returns the current content of the graphic object as an image.
+     * 
+     * This is used to accomplish double buffering.
+     */
+    Image getImage() {
+        return image;
+    }
 
     /**
      * Assigns the object to the concrete board.
@@ -81,7 +126,7 @@ public abstract class GraphicObject {
      */
     void assignBoard(GraphicBoard board) {
         this.board = board;
-        update();
+        repaint();
     }
     
     /**
@@ -89,7 +134,7 @@ public abstract class GraphicObject {
      * @return the width
      */
     public int getWidth() {
-        return width;
+        return image.getWidth();
     }
 
     /**
@@ -97,18 +142,7 @@ public abstract class GraphicObject {
      * @return the height
      */
     public int getHeight() {
-        return height;
-    }
-
-    /**
-     * Sets the size of the rectangular area representing the object.
-     * @param width the new width
-     * @param height the new height
-     */
-    public void setSize(int width, int height) {
-        this.width = width;
-        this.height = height;
-        update();
+        return image.getHeight();
     }
     
     /**
@@ -135,7 +169,7 @@ public abstract class GraphicObject {
     public void moveTo(int x, int y) {
         this.x = x;
         this.y = y;
-        update();
+        repaint();
     }
     
     /**
@@ -146,7 +180,7 @@ public abstract class GraphicObject {
     public void moveBy(int deltaX, int deltaY) {
         x += deltaX;
         y += deltaY;
-        update();
+        repaint();
     }
     
     /**
@@ -157,7 +191,7 @@ public abstract class GraphicObject {
         if (board != null)
             board.moveInFrontOf(this, what);
         
-        update();
+        repaint();
     }
     
     /**
@@ -167,7 +201,7 @@ public abstract class GraphicObject {
         if (board != null)
             board.sendToBackground(this);
         
-        update();
+        repaint();
     }
     
     /**
@@ -177,7 +211,7 @@ public abstract class GraphicObject {
         if (board != null)
             board.bringToForeground(this);
        
-        update();
+        repaint();
     }
     
     /**
@@ -218,7 +252,7 @@ public abstract class GraphicObject {
      * Repaints this object on a board and other (or all) objects if necessary
      * (depends on an implementation).
      */
-    private void update() {
+    protected void repaint() {
         if (board != null)
             board.repaintAll();
     }
