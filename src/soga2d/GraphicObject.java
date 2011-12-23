@@ -24,9 +24,11 @@
 package soga2d;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import soga2d.events.KeyPressListener;
 import soga2d.events.MouseClickListener;
 
@@ -67,6 +69,7 @@ public abstract class GraphicObject {
     private GraphicBoard board;
     private MouseClickListener mouseClickListener;
     private KeyPressListener keyPressListener;
+    private List<CollisionDetector> collisionDetectors = new ArrayList<CollisionDetector>();
     
     /**
      * Constructs an object with x = 0, y = 0, width = 1 and height = 1.
@@ -114,7 +117,7 @@ public abstract class GraphicObject {
      * 
      * This is used to accomplish double buffering.
      */
-    Image getImage() {
+    BufferedImage getImage() {
         return image;
     }
 
@@ -162,6 +165,15 @@ public abstract class GraphicObject {
     }
     
     /**
+     * Returns a <code>Rectangle</code> representaion of the object's position
+     * and size.
+     * @return the rectangle
+     */
+    public Rectangle getRectangle() {
+        return new Rectangle(x, y, getWidth(), getHeight());
+    }
+    
+    /**
      * Moves the object to a new location on its associated board.
      * @param x the new x coordinate
      * @param y the new y coordinate
@@ -169,7 +181,9 @@ public abstract class GraphicObject {
     public void moveTo(int x, int y) {
         this.x = x;
         this.y = y;
+        
         repaint();
+        notifyCollisionDetectors();
     }
     
     /**
@@ -178,9 +192,7 @@ public abstract class GraphicObject {
      * @param deltaY the y coordinate change (can be either negative or positive)
      */
     public void moveBy(int deltaX, int deltaY) {
-        x += deltaX;
-        y += deltaY;
-        repaint();
+        moveTo(x += deltaX, y += deltaY);
     }
     
     /**
@@ -228,6 +240,32 @@ public abstract class GraphicObject {
      */
     public void setKeyPressListener(KeyPressListener listener) {
         keyPressListener = listener;
+    }
+    
+    /**
+     * Finds out whether this objects graphically colides with the specified object.
+     * @param object the second object
+     * @return true if the objects collide, false otherwise
+     * @see CollisionDetector
+     */
+    public boolean collidesWith(GraphicObject object) {
+        return new CollisionDetector(this, object).objectsCollide();
+    }
+    
+    /**
+     * Adds a collision detector to notify when the object changes (e.g. moves).
+     * @param detector the collision detector
+     */
+    void addCollisionDetector(CollisionDetector detector) {
+        collisionDetectors.add(detector);
+    }
+    
+    /**
+     * Nofifies all associated collision detectors after the object changes.
+     */
+    private void notifyCollisionDetectors() {
+        for (CollisionDetector detector : collisionDetectors)
+            detector.objectChanged();
     }
     
     /**
