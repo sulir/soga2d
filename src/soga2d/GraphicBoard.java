@@ -28,7 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import soga2d.events.KeyPressListener;
+import soga2d.events.KeyListener;
 
 /**
  * The container of all graphic objects.
@@ -39,7 +39,7 @@ public class GraphicBoard {
     private GraphicComponent component;
     private List<GraphicObject> items = new ArrayList<GraphicObject>();
     private boolean locked = false;
-    private KeyPressListener keyPressListener;
+    private KeyListener keyListener;
     
     /**
      * Constructs a graphic board bound to the GUI component.
@@ -112,8 +112,8 @@ public class GraphicBoard {
      * Registers a key press listener (can be only one).
      * @param listener the listener
      */
-    public void setKeyPressListener(KeyPressListener listener) {
-        keyPressListener = listener;
+    public void setKeyPressListener(KeyListener listener) {
+        keyListener = listener;
     }
     
     /**
@@ -165,16 +165,16 @@ public class GraphicBoard {
     }
     
     /**
-     * Called by the bound component when a key-press event occurred
-     * while the component had focus.
+     * Called by the bound component when a key event occurred while the
+     * component had focus.
      * @param event the key event object
      */
-    void keyPressed(KeyEvent event) {
-        if (keyPressListener != null)
-            keyPressListener.onKeyPress(event);
+    void keyEvent(KeyEvent event) {
+        if (keyListener != null)
+            keyListener.onKeyEvent(event);
         
         for (GraphicObject object : items)
-            object.keyPressed(event);
+            object.keyEvent(event);
     }
     
     /**

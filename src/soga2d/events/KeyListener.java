@@ -27,13 +27,13 @@ import java.awt.event.KeyEvent;
 
 /**
  * This interface should be implemented by object which want to receive
- * key press events.
+ * key events.
  * @author Matúš Sulír
  */
-public interface KeyPressListener {
+public interface KeyListener {
     /**
-     * Called when the user presses a key.
+     * Called when the user presses / releases a key or types a character.
      * @param e the key event
      */
-    void onKeyPress(KeyEvent e);
+    void onKeyEvent(KeyEvent e);
 }

@@ -27,6 +27,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
@@ -52,10 +53,20 @@ public class GraphicPanel extends JPanel implements GraphicComponent {
             }
         });
         
-        addKeyListener(new KeyAdapter() {
+        addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent e) {
-                board.keyPressed(e);
+                board.keyEvent(e);
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                board.keyEvent(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                board.keyEvent(e);
             }
         });
     }
