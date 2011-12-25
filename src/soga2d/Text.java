@@ -129,14 +129,15 @@ public class Text extends GraphicObject {
      * graphic object.
      */
     private void updateImage() {
+        beforeChange();
         createImageToFit();
         
-        Graphics2D g = getGraphics();
+        Graphics2D g = image.createGraphics();
         g.setFont(font);
         g.setColor(color);
         g.drawString(text, 0, getHeight());
         
-        update();
+        afterChange();
     }
     
     /**

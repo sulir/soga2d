@@ -23,6 +23,8 @@
  */
 package soga2d;
 
+import java.awt.Rectangle;
+
 /**
  * The interface which must be implemented by all classes bound to a GraphicBoard.
  * 
@@ -31,9 +33,21 @@ package soga2d;
  * @author Matúš Sulír
  */
 public interface GraphicComponent {
+    /**
+     * Returns the width of the drawable area.
+     * @return the width in pixels
+     */
+    int getWidth();
     
     /**
-     * Repaints the whole component.
+     * Returns the height of the drawable area.
+     * @return the height in pixels
      */
-    void repaintAll();
+    int getHeight();
+    
+    /**
+     * Repaints the selected area of the component.
+     * @param area the rectangle to repaint.
+     */
+    void repaint(Rectangle area);
 }

@@ -24,6 +24,7 @@
 package soga2d;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class GraphicBoard {
     private List<GraphicObject> items = new ArrayList<GraphicObject>();
     private boolean locked = false;
     private KeyListener keyListener;
+    private List<Rectangle> dirtyAreas = new ArrayList<Rectangle>();
     
     /**
      * Constructs a graphic board bound to the GUI component.
@@ -105,7 +107,7 @@ public class GraphicBoard {
      */
     public void unlock() {
         locked = false;
-        repaintAll();
+        repaintDirtyAreas();
     }
     
     /**
@@ -178,10 +180,37 @@ public class GraphicBoard {
     }
     
     /**
+     * Repaints the selected area.
+     * @param area the rectangle to repaint
+     */
+    void repaintArea(Rectangle area) {
+        if (locked) {
+            dirtyAreas.add(area);
+        } else {
+            component.repaint(area);
+        }
+    }
+    
+    /**
      * Repaints the whole board.
      */
-    void repaintAll() {
-        if (!locked)
-            component.repaintAll();
+    private void repaintAll() {
+        Rectangle wholeArea = new Rectangle(component.getWidth(), component.getHeight());
+        repaintArea(wholeArea);
+    }
+    
+    /**
+     * Repaints all "dirty" areas - the rectangles which were told to be
+     * repainted while the board was locked.
+     */
+    private void repaintDirtyAreas() {
+        Rectangle union = new Rectangle();
+        
+        for (Rectangle area : dirtyAreas) {
+            union = union.union(area);
+        }
+        
+        component.repaint(union);
+        dirtyAreas.clear();
     }
 }

@@ -25,7 +25,6 @@ package soga2d;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -38,7 +37,7 @@ import javax.swing.JPanel;
  * @author Matúš Sulír
  */
 public class GraphicPanel extends JPanel implements GraphicComponent {
-    GraphicBoard board;
+    private GraphicBoard board;
     
     /**
      * The default constructor.
@@ -88,13 +87,5 @@ public class GraphicPanel extends JPanel implements GraphicComponent {
      */
     public GraphicBoard getBoard() {
         return board;
-    }
-    
-    /**
-     * Repaints the whole JPanel.
-     */
-    @Override
-    public void repaintAll() {
-        repaint();
     }
 }

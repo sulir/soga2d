@@ -36,25 +36,21 @@ import soga2d.events.MouseClickListener;
  * The graphic object is a rectangular item located on a graphic board, e.g. an
  * image or a text.
  * 
- * When subclassing this class:
+ * In subclasses of this class, do this when modifying the size, position or
+ * content:
  * <ul>
- * <li>Set the <code>x</code> and <code>y</code> properties if needed.</li>
- * <li>Draw the appropriate content into the <code>image</code> property.</li>
- * <li>Call the <code>update()</code> method after the each content change.</li>
+ * <li>Call the <code>beforeChange() method.</li>
+ * <li>Do the desired changes. For example, set the <code>x</code>,
+ * <code>y</code> and <code>image</code> properties, draw the 
+ * content into the graphics obtained by the <code>image.createGraphics()</code>
+ * method, etc.</li>
+ * <li>Call the <code>afterChange()</code> method.</li>
  * </ul>
- * 
- * <em>Note:</em> Calling <code>update()</code> in a constructor is unnecessary
- * because there is no board associated with the object yet.
+ * <em>Note:</em> Calling <code>beforeChange()</code> and
+ * <code>afterChange()</code> in a constructor is not necessary.
  * @author Matúš Sulír
  */
-public abstract class GraphicObject {
-    /**
-     * The internal bitmap image.
-     * 
-     * Contains also the width and height of this graphical object.
-     */
-    protected BufferedImage image;
-    
+public abstract class GraphicObject { 
     /**
      * The x position on the board.
      */
@@ -65,11 +61,19 @@ public abstract class GraphicObject {
      */
     protected int y;
     
+    /**
+     * The internal bitmap image without any transformations applied.
+     * 
+     * Contains also the width and height of this graphical object.
+     */
+    protected BufferedImage image;
+    
+    private BufferedImage transformedImage;
+    private Rectangle oldRectangle = new Rectangle();
     private GraphicBoard board;
     private MouseClickListener mouseClickListener;
     private KeyListener keyListener;
     private List<CollisionDetector> collisionDetectors = new ArrayList<CollisionDetector>();
-    private int oldAngle = 0;
     private int angle = 0;
     
     /**
@@ -100,17 +104,7 @@ public abstract class GraphicObject {
      * @param height the image height
      */
     protected final void createImage(int width, int height) {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-    }
-    
-    /**
-     * Returns the Graphics2D object from the internal image.
-     * 
-     * This is a utility method used when subclasses want to draw on the image.
-     * @return the Graphics2D object
-     */
-    protected Graphics2D getGraphics() {
-        return image.createGraphics();
+        transformedImage = image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
     
     /**
@@ -119,7 +113,7 @@ public abstract class GraphicObject {
      * This is used to accomplish double buffering.
      */
     BufferedImage getImage() {
-        return image;
+        return transformedImage;
     }
 
     /**
@@ -130,7 +124,8 @@ public abstract class GraphicObject {
      */
     void assignBoard(GraphicBoard board) {
         this.board = board;
-        repaint();
+        
+        afterChange();
     }
     
     /**
@@ -180,6 +175,8 @@ public abstract class GraphicObject {
      * @param y the new y coordinate
      */
     public void moveTo(int x, int y) {
+        saveOldArea();
+        
         this.x = x;
         this.y = y;
         
@@ -202,10 +199,11 @@ public abstract class GraphicObject {
      * @see #rotate(int)
      */
     public void setAngle(int angle) {
-        oldAngle = this.angle;
         this.angle = angle;
         
-        update();
+        applyTransformations();
+        repaint();
+        notifyCollisionDetectors();
     }
     
     /**
@@ -310,27 +308,32 @@ public abstract class GraphicObject {
     }
     
     /**
-     * Applies the transformations and repaints the object on the board.
+     * Call this method in a subclass before any change.
      */
-    protected void update() {
+    protected void beforeChange() {
+        saveOldArea();
+    }
+    
+    /**
+     * Call this method in a subclass after any change.
+     */
+    protected void afterChange() {
         applyTransformations();
         repaint();
+        notifyCollisionDetectors();
     }
     
     /**
      * Applies the currently selected transformations (e.g. rotation) to this image.
      */
     private void applyTransformations() {
-        int rotateAngle = angle - oldAngle;
-        
-        if (rotateAngle != 0) {
-            BufferedImage newImage = new BufferedImage(getWidth(), getHeight(), image.getType());
-            Graphics2D g = newImage.createGraphics();
-            g.rotate(Math.toRadians(rotateAngle), getWidth() / 2, getHeight() / 2);
+        if (angle == 0) {
+            transformedImage = image;
+        } else {
+            transformedImage = new BufferedImage(getWidth(), getHeight(), image.getType());
+            Graphics2D g = transformedImage.createGraphics();
+            g.rotate(Math.toRadians(angle), getWidth() / 2, getHeight() / 2);
             g.drawImage(image, null, 0, 0);
-            
-            image = newImage;
-            oldAngle = angle;
         }
     }
     
@@ -340,6 +343,17 @@ public abstract class GraphicObject {
      */
     private void repaint() {
         if (board != null)
-            board.repaintAll();
+            board.repaintArea(oldRectangle.union(getRectangle()));
+    }
+    
+    /**
+     * Saves the old position and size.
+     * 
+     * This is used to repaint both the original and new area after the object
+     * was moved.
+     */
+    private void saveOldArea() {
+        if (board != null)
+            oldRectangle = getRectangle();
     }
 }

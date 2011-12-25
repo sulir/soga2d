@@ -61,7 +61,7 @@ public class Texture extends GraphicObject {
         BufferedImage loadedImage = ImageIO.read(GraphicObject.class.getClassLoader().getResource(fileName));
         TexturePaint texturePaint = new TexturePaint(loadedImage, new Rectangle(loadedImage.getWidth(null), loadedImage.getHeight(null)));
         
-        Graphics2D g = getGraphics();
+        Graphics2D g = image.createGraphics();
         g.setPaint(texturePaint);
         g.fill(new Rectangle(width, height));
     }
