@@ -25,7 +25,9 @@ package soga2d;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
@@ -133,9 +135,17 @@ public class Text extends GraphicObject {
         createImageToFit();
         
         Graphics2D g = image.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setFont(font);
         g.setColor(color);
-        g.drawString(text, 0, getHeight());
+        
+        int lineHeigth = g.getFontMetrics().getHeight();
+        int top = lineHeigth;
+        
+        for (String line : text.split("\n")) {
+            g.drawString(line, 0, top);
+            top += lineHeigth;
+        }
         
         afterChange();
     }
@@ -145,15 +155,20 @@ public class Text extends GraphicObject {
      * and creates it.
      */
     private void createImageToFit() {
-        Graphics2D test = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).createGraphics();
+        Graphics2D test = new BufferedImage(1, 1, image.getType()).createGraphics();
+        FontMetrics metrics = test.getFontMetrics(font);
         
-        FontRenderContext context = test.getFontRenderContext();
-        Rectangle2D bounds = font.getStringBounds(text, context);
-        LineMetrics metrics = font.getLineMetrics(text, context);
+        int lineHeight = metrics.getHeight();
+        int totalWidth = 0;
+        int totalHeight = 0;
         
-        int width = (int) bounds.getWidth();
-        int height = (int) metrics.getHeight();
+        for (String line : text.split("\n")) {
+            int lineWidth = metrics.stringWidth(line);
+            
+            totalWidth = Math.max(totalWidth, lineWidth);
+            totalHeight += lineHeight;
+        }
         
-        createImage(width, height);
+        createImage(totalWidth, totalHeight + metrics.getDescent());
     }
 }
