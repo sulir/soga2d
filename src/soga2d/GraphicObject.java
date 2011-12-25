@@ -40,11 +40,10 @@ import soga2d.events.MouseClickListener;
  * <ul>
  * <li>Set the <code>x</code> and <code>y</code> properties if needed.</li>
  * <li>Draw the appropriate content into the <code>image</code> property.</li>
- * <li>Call the <code>repaint()</code> method after the each position, size or
- * content change.</li>
+ * <li>Call the <code>update()</code> method after the each content change.</li>
  * </ul>
  * 
- * <em>Note:</em> Calling <code>repaint()</code> in a constructor is unnecessary
+ * <em>Note:</em> Calling <code>update()</code> in a constructor is unnecessary
  * because there is no board associated with the object yet.
  * @author Matúš Sulír
  */
@@ -70,6 +69,8 @@ public abstract class GraphicObject {
     private MouseClickListener mouseClickListener;
     private KeyListener keyListener;
     private List<CollisionDetector> collisionDetectors = new ArrayList<CollisionDetector>();
+    private int oldAngle = 0;
+    private int angle = 0;
     
     /**
      * Constructs an object with x = 0, y = 0, width = 1 and height = 1.
@@ -109,7 +110,7 @@ public abstract class GraphicObject {
      * @return the Graphics2D object
      */
     protected Graphics2D getGraphics() {
-        return (Graphics2D) image.getGraphics();
+        return image.createGraphics();
     }
     
     /**
@@ -193,6 +194,28 @@ public abstract class GraphicObject {
      */
     public void moveBy(int deltaX, int deltaY) {
         moveTo(x += deltaX, y += deltaY);
+    }
+    
+    /**
+     * Sets the new rotation angle for this object.
+     * @param angle the angle in degrees
+     * @see #rotate(int)
+     */
+    public void setAngle(int angle) {
+        oldAngle = this.angle;
+        this.angle = angle;
+        
+        update();
+    }
+    
+    /**
+     * Rotates the object clockwise around its center.
+     * 
+     * Non-square objects may be cropped.
+     * @param angle the angle in degrees
+     */
+    public void rotate(int angle) {
+        setAngle(this.angle + angle);
     }
     
     /**
@@ -287,10 +310,35 @@ public abstract class GraphicObject {
     }
     
     /**
+     * Applies the transformations and repaints the object on the board.
+     */
+    protected void update() {
+        applyTransformations();
+        repaint();
+    }
+    
+    /**
+     * Applies the currently selected transformations (e.g. rotation) to this image.
+     */
+    private void applyTransformations() {
+        int rotateAngle = angle - oldAngle;
+        
+        if (rotateAngle != 0) {
+            BufferedImage newImage = new BufferedImage(getWidth(), getHeight(), image.getType());
+            Graphics2D g = newImage.createGraphics();
+            g.rotate(Math.toRadians(rotateAngle), getWidth() / 2, getHeight() / 2);
+            g.drawImage(image, null, 0, 0);
+            
+            image = newImage;
+            oldAngle = angle;
+        }
+    }
+    
+    /**
      * Repaints this object on a board and other (or all) objects if necessary
      * (depends on an implementation).
      */
-    protected void repaint() {
+    private void repaint() {
         if (board != null)
             board.repaintAll();
     }

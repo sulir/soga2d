@@ -101,9 +101,7 @@ public class Text extends GraphicObject {
     public void setText(String text) {
         this.text = text;
         
-        createImageToFit();
         updateImage();
-        repaint();
     }
     
     /**
@@ -113,9 +111,7 @@ public class Text extends GraphicObject {
     public void setFont(Font font) {
         this.font = font;
         
-        createImageToFit();
         updateImage();
-        repaint();
     }
     
     /**
@@ -126,17 +122,21 @@ public class Text extends GraphicObject {
         this.color = color;
         
         updateImage();
-        repaint();
     }
     
     /**
-     * Draws the text on the image.
+     * Creates an appropriate image, draws the text on it and updates the
+     * graphic object.
      */
     private void updateImage() {
+        createImageToFit();
+        
         Graphics2D g = getGraphics();
         g.setFont(font);
         g.setColor(color);
         g.drawString(text, 0, getHeight());
+        
+        update();
     }
     
     /**
