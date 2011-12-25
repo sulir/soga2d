@@ -78,9 +78,9 @@ public class Text extends GraphicObject {
      * @param color the text foreground color
      */
     public Text(String text, int x, int y, Font font, Color color) {
+        super(x, y);
+        
         this.text = text;
-        this.x = x;
-        this.y = y;
         this.font = font;
         this.color = color;
         

@@ -23,38 +23,61 @@
  */
 package soga2d;
 
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
- * The image (bitmap) graphical object.
+ *
  * @author Matúš Sulír
  */
-public class Picture extends GraphicObject {
-    /**
-     * Constructs a picture from a file.
-     * 
-     * The width and height is computed automatically. The initial x and y
-     * coorditates are 0.
-     * @param fileName the file to open
-     * @throws IOException when the file could not be open
-     */
-    public Picture(String fileName) throws IOException {
-        this(fileName, 0, 0);
-    }
+public class Rectangle extends GraphicObject {
+    private int width;
+    private int height;
+    private Color outline;
+    private Color fill;
     
-    /**
-     * Constructs a picture from a file.
-     * 
-     * The width and height is computed automatically.
-     * @param fileName the file to open
-     * @param x the initial x coordinate on a board
-     * @param y the initial y coordinate on a board
-     * @throws IOException when the file could not be open
-     */
-    public Picture(String fileName, int x, int y) throws IOException {
+    public Rectangle(int x, int y, int width, int height, Color outline, Color fill) {
         super(x, y);
         
-        image = ImageIO.read(GraphicObject.class.getClassLoader().getResource(fileName));
+        this.width = width;
+        this.height = height;
+        this.outline = outline;
+        this.fill = fill;
+        
+        draw();
+    }
+    
+    public void setWidth(int width) {
+        this.width = width;
+        draw();
+    }
+    
+    public void setHeight(int height) {
+        this.height = height;
+        draw();
+    }
+    
+    public void setOutlineColor(Color outline) {
+        this.outline = outline;
+        draw();
+    }
+    
+    public void setFill(Color fill) {
+        this.fill = fill;
+        draw();
+    }
+    
+    private void draw() {
+        beforeChange();
+        
+        createImage(width, height);
+        Graphics2D g = image.createGraphics();
+        
+        g.setColor(fill);
+        g.fillRect(x, y, getWidth(), getHeight());
+        g.setColor(outline);
+        g.drawRect(x, y, getWidth(), getHeight());
+        
+        afterChange();
     }
 }

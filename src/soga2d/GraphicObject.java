@@ -79,8 +79,12 @@ public abstract class GraphicObject {
     /**
      * Constructs an object with x = 0, y = 0, width = 1 and height = 1.
      */
-    public GraphicObject() {
-        this(0, 0, 1, 1);
+    protected GraphicObject() {
+        this(0, 0);
+    }
+    
+    protected GraphicObject(int x, int y) {
+        this(x, y, 1, 1);
     }
     
     /**
@@ -90,7 +94,7 @@ public abstract class GraphicObject {
      * @param width the width
      * @param height the height
      */
-    public GraphicObject(int x, int y, int width, int height) {
+    protected GraphicObject(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         

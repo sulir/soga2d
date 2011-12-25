@@ -33,7 +33,7 @@ import java.awt.event.KeyEvent;
 public interface KeyListener {
     /**
      * Called when the user presses / releases a key or types a character.
-     * @param e the key event
+     * @param event the key event
      */
-    void onKeyEvent(KeyEvent e);
+    void onKeyEvent(KeyEvent event);
 }
