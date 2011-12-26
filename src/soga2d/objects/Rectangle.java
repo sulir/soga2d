@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package soga2d;
+package soga2d.objects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import soga2d.GraphicObject;
 
 /**
  *

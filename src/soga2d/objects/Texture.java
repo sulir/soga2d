@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package soga2d;
+package soga2d.objects;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -29,6 +29,7 @@ import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import soga2d.GraphicObject;
 
 /**
  * The image repeated horizontally and vertically to fill the given area.

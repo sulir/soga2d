@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package soga2d;
+package soga2d.objects;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -32,6 +32,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import soga2d.GraphicObject;
 
 /**
  * The graphical object containing a textual string.

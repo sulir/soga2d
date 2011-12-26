@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package soga2d;
+package soga2d.objects;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import soga2d.GraphicObject;
 
 /**
  * The image (bitmap) graphical object.
@@ -55,6 +57,16 @@ public class Picture extends GraphicObject {
     public Picture(String fileName, int x, int y) throws IOException {
         super(x, y);
         
-        image = ImageIO.read(GraphicObject.class.getClassLoader().getResource(fileName));
+        image = Picture.loadImage(fileName);
+    }
+    
+    /**
+     * Helper method - loads the image from this JAR file.
+     * @param path the path including the file name
+     * @return the loaded image
+     * @throws IOException when the image could not be open
+     */
+    public static BufferedImage loadImage(String path) throws IOException {
+        return ImageIO.read(GraphicObject.class.getClassLoader().getResource(path));
     }
 }
