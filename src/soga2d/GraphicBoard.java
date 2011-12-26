@@ -56,7 +56,7 @@ public class GraphicBoard {
      * @param g the graphics which can be drawn on
      */
     void paint(Graphics2D g) {
-        for (GraphicObject object : items) {
+        for (GraphicObject object : allItems()) {
             g.drawImage(object.getImage(), object.getX(), object.getY(), null);
         }
     }
@@ -157,7 +157,7 @@ public class GraphicBoard {
         int x = event.getX();
         int y = event.getY();
         
-        for (GraphicObject object : items) {
+        for (GraphicObject object : allItems()) {
             if (x >= object.getX() && x < object.getX() + object.getWidth()
                     && y >= object.getY() && y < object.getY() + object.getHeight()) {
                 object.mouseClicked();
@@ -175,7 +175,7 @@ public class GraphicBoard {
         if (keyListener != null)
             keyListener.onKeyEvent(event);
         
-        for (GraphicObject object : items)
+        for (GraphicObject object : allItems())
             object.keyEvent(event);
     }
     
@@ -212,5 +212,17 @@ public class GraphicBoard {
         
         component.repaint(union);
         dirtyAreas.clear();
+    }
+    
+    /**
+     * Creates a new list containing copies of the references to all graphic
+     * object on this board.
+     * 
+     * This is used when iterating the list to prevent
+     * <code>ConcurrentModificationException</code>.
+     * @return the list of all items
+     */
+    private List<GraphicObject> allItems() {
+        return new ArrayList<GraphicObject>(items);
     }
 }

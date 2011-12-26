@@ -73,7 +73,7 @@ public abstract class GraphicObject {
     private GraphicBoard board;
     private MouseClickListener mouseClickListener;
     private KeyListener keyListener;
-    private List<CollisionDetector> collisionDetectors = new ArrayList<CollisionDetector>();
+    private List<Detector> detectors = new ArrayList<Detector>();
     private int angle = 0;
     
     /**
@@ -83,6 +83,11 @@ public abstract class GraphicObject {
         this(0, 0);
     }
     
+    /**
+     * Constructs an object with width = 1 and height = 1.
+     * @param x the x coordinate (the leftmost is 0)
+     * @param y the y coordinate (the topmost is 0)
+     */
     protected GraphicObject(int x, int y) {
         this(x, y, 1, 1);
     }
@@ -127,9 +132,13 @@ public abstract class GraphicObject {
      * @param board 
      */
     void assignBoard(GraphicBoard board) {
-        this.board = board;
-        
-        afterChange();
+        if (board == null) {
+            this.board.repaintArea(getRectangle());
+            this.board = null;
+        } else {
+            this.board = board;
+            afterChange();
+        }
     }
     
     /**
@@ -185,7 +194,7 @@ public abstract class GraphicObject {
         this.y = y;
         
         repaint();
-        notifyCollisionDetectors();
+        notifyDetectors();
     }
     
     /**
@@ -194,7 +203,7 @@ public abstract class GraphicObject {
      * @param deltaY the y coordinate change (can be either negative or positive)
      */
     public void moveBy(int deltaX, int deltaY) {
-        moveTo(x += deltaX, y += deltaY);
+        moveTo(x + deltaX, y + deltaY);
     }
     
     /**
@@ -207,7 +216,7 @@ public abstract class GraphicObject {
         
         applyTransformations();
         repaint();
-        notifyCollisionDetectors();
+        notifyDetectors();
     }
     
     /**
@@ -278,18 +287,18 @@ public abstract class GraphicObject {
     }
     
     /**
-     * Adds a collision detector to notify when the object changes (e.g. moves).
-     * @param detector the collision detector
+     * Adds a detector to notify when the object changes (e.g. moves).
+     * @param detector the detector (collision, proximity, ...)
      */
-    void addCollisionDetector(CollisionDetector detector) {
-        collisionDetectors.add(detector);
+    void addDetector(Detector detector) {
+        detectors.add(detector);
     }
     
     /**
-     * Nofifies all associated collision detectors after the object changes.
+     * Nofifies all associated detectors after the object changes.
      */
-    private void notifyCollisionDetectors() {
-        for (CollisionDetector detector : collisionDetectors)
+    private void notifyDetectors() {
+        for (Detector detector : detectors)
             detector.objectChanged();
     }
     
@@ -324,7 +333,7 @@ public abstract class GraphicObject {
     protected void afterChange() {
         applyTransformations();
         repaint();
-        notifyCollisionDetectors();
+        notifyDetectors();
     }
     
     /**

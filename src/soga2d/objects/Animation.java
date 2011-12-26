@@ -30,7 +30,9 @@ import java.util.TimerTask;
 import soga2d.GraphicObject;
 
 /**
- * The animation is displayed as a static image until the start() method is called. Then the frames are shown circularily (???) until the stop() method call. Finally, the static image is displayed again.
+ * The animation is displayed as a static image until the start() method is
+ * called. Then the frames are shown ciclically until the stop() method call.
+ * Finally, the static image is displayed again.
  * @author Matúš Sulír
  */
 public class Animation extends GraphicObject {

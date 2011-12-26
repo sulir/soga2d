@@ -28,7 +28,7 @@ import java.awt.Graphics2D;
 import soga2d.GraphicObject;
 
 /**
- *
+ * The filled rectangle.
  * @author Matúš Sulír
  */
 public class Rectangle extends GraphicObject {
@@ -37,6 +37,15 @@ public class Rectangle extends GraphicObject {
     private Color outline;
     private Color fill;
     
+    /**
+     * Constructs a rectangle.
+     * @param x the x position on the board
+     * @param y the y position on the board
+     * @param width the rectangle width (including the outline)
+     * @param height the rectangle height (including the outline)
+     * @param outline the outline color
+     * @param fill the fill color
+     */
     public Rectangle(int x, int y, int width, int height, Color outline, Color fill) {
         super(x, y);
         
@@ -48,26 +57,45 @@ public class Rectangle extends GraphicObject {
         draw();
     }
     
+    /**
+     * Sets the rectangle width.
+     * @param width the new width
+     */
     public void setWidth(int width) {
         this.width = width;
         draw();
     }
     
+    /**
+     * Sets the rectangle height.
+     * @param height the new height
+     */
     public void setHeight(int height) {
         this.height = height;
         draw();
     }
     
+    /**
+     * Sets the outline color.
+     * @param outline the new outline color
+     */
     public void setOutlineColor(Color outline) {
         this.outline = outline;
         draw();
     }
     
+    /**
+     * Sets the fill color.
+     * @param fill the new fill color
+     */
     public void setFill(Color fill) {
         this.fill = fill;
         draw();
     }
     
+    /**
+     * Draws the rectangle on the internal image.
+     */
     private void draw() {
         beforeChange();
         
@@ -75,9 +103,9 @@ public class Rectangle extends GraphicObject {
         Graphics2D g = image.createGraphics();
         
         g.setColor(fill);
-        g.fillRect(x, y, getWidth(), getHeight());
+        g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(outline);
-        g.drawRect(x, y, getWidth(), getHeight());
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         
         afterChange();
     }

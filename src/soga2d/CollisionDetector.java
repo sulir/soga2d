@@ -32,7 +32,7 @@ import soga2d.events.CollisionListener;
  * objects occurs.
  * @author Matúš Sulír
  */
-public class CollisionDetector {
+public class CollisionDetector implements Detector {
     private GraphicObject first;
     private GraphicObject second;
     private CollisionListener listener;
@@ -63,10 +63,13 @@ public class CollisionDetector {
             for (int x = (int) intersection.getX(); x < intersection.getMaxX(); x++) {
                 for (int y = (int) intersection.getY(); y < intersection.getMaxY(); y++) {
                     int firstPixel = getARGBAtBoardCoordinate(first, x, y);
-                    int secondPixel = getARGBAtBoardCoordinate(second, x, y);
                     
-                    if (!isPixelTransparent(firstPixel) && !isPixelTransparent(secondPixel))
-                        return true;
+                    if (!isPixelTransparent(firstPixel)) {
+                        int secondPixel = getARGBAtBoardCoordinate(second, x, y);
+                    
+                        if (!isPixelTransparent(secondPixel))
+                            return true;
+                    }
                 }
             }
         }
@@ -78,23 +81,23 @@ public class CollisionDetector {
      * Registers a collision listener (can be only one).
      * 
      * The listener is notified after each change of one of the objects if
-     * the objects are currently in a collision. Only moving the objects
-     * can fire this event, other changes are ignored so far.
+     * the objects are in a collision.
      * @param listener 
      */
     public void setListener(CollisionListener listener) {
         this.listener = listener;
         
-        first.addCollisionDetector(this);
-        second.addCollisionDetector(this);
+        first.addDetector(this);
+        second.addDetector(this);
     }
     
     /**
      * This method is used by a graphic object to notify this detector about
      * any change which could cause the collision.
      */
-    void objectChanged() {
-        if (objectsCollide())
+    @Override
+    public void objectChanged() {
+        if (listener != null && objectsCollide())
             listener.onCollision();
     }
     
