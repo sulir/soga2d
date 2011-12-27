@@ -28,6 +28,7 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import soga2d.events.KeyListener;
 
@@ -124,11 +125,10 @@ public class GraphicBoard {
      * @param inFrontOfWhat the object which will be behind the first one (this objet will not be moved)
      */
     void moveInFrontOf(GraphicObject object, GraphicObject inFrontOfWhat) {
-        items.remove(object);
-        int index = items.indexOf(inFrontOfWhat);
-        
-        if (index != -1)
-            items.add(index, object);
+        if (items.indexOf(inFrontOfWhat) != -1) {
+            items.remove(object);
+            items.add(items.indexOf(inFrontOfWhat), object);
+        }
     }
     
     /**
@@ -157,7 +157,10 @@ public class GraphicBoard {
         int x = event.getX();
         int y = event.getY();
         
-        for (GraphicObject object : allItems()) {
+        List<GraphicObject> itemList = allItems();
+        Collections.reverse(itemList);
+        
+        for (GraphicObject object : itemList) {
             if (x >= object.getX() && x < object.getX() + object.getWidth()
                     && y >= object.getY() && y < object.getY() + object.getHeight()) {
                 object.mouseClicked();
