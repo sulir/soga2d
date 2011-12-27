@@ -76,6 +76,8 @@ public abstract class GraphicObject {
     private List<Detector> detectors = new ArrayList<Detector>();
     private int angle = 0;
     
+    private List<GraphicObject> subobjects = new ArrayList<GraphicObject>();
+    
     /**
      * Constructs an object with x = 0, y = 0, width = 1 and height = 1.
      */
@@ -107,38 +109,25 @@ public abstract class GraphicObject {
     }
     
     /**
-     * Initializes the internal image to an empty one (containing only
-     * transparent pixels).
-     * @param width the image width
-     * @param height the image height
+     * Adds a subobject to this object.
+     * 
+     * Subobjects are contained in the parent objects and cannot exceed its
+     * boundaries. If the parent moves, the subobject also moves. Other
+     * behavior is not yet defined.
+     * @param object the subobject to add
      */
-    protected final void createImage(int width, int height) {
-        transformedImage = image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    public void addSubobject(GraphicObject object) {
+        subobjects.add(object);
+        repaint();
     }
     
     /**
-     * Returns the current content of the graphic object as an image.
-     * 
-     * This is used to accomplish double buffering.
+     * Removes the subobject of this object.
+     * @param object the subobject to remove
      */
-    BufferedImage getImage() {
-        return transformedImage;
-    }
-
-    /**
-     * Assigns the object to the concrete board.
-     * 
-     * This causes the object to be drawn on the board whenever needed.
-     * @param board 
-     */
-    void assignBoard(GraphicBoard board) {
-        if (board == null) {
-            this.board.repaintArea(getRectangle());
-            this.board = null;
-        } else {
-            this.board = board;
-            afterChange();
-        }
+    public void removeSubObject(GraphicObject object) {
+        subobjects.remove(object);
+        repaint();
     }
     
     /**
@@ -284,6 +273,50 @@ public abstract class GraphicObject {
      */
     public boolean collidesWith(GraphicObject object) {
         return new CollisionDetector(this, object).objectsCollide();
+    }
+    
+    /**
+     * Returns the current content of the graphic object as an image.
+     */
+    BufferedImage getImage() {
+        if (subobjects.isEmpty()) {
+            return transformedImage;
+        } else {
+            BufferedImage resultImage = new BufferedImage(getWidth(), getHeight(), image.getType());
+            Graphics2D g = resultImage.createGraphics();
+            g.drawImage(image, null, 0, 0);
+            
+            for (GraphicObject object : subobjects)
+                g.drawImage(object.getImage(), null, object.getX(), object.getY());
+            
+            return resultImage;
+        }
+    }
+
+    /**
+     * Assigns the object to the concrete board.
+     * 
+     * This causes the object to be drawn on the board whenever needed.
+     * @param board 
+     */
+    void assignBoard(GraphicBoard board) {
+        if (board == null) {
+            this.board.repaintArea(getRectangle());
+            this.board = null;
+        } else {
+            this.board = board;
+            afterChange();
+        }
+    }
+    
+    /**
+     * Initializes the internal image to an empty one (containing only
+     * transparent pixels).
+     * @param width the image width
+     * @param height the image height
+     */
+    protected final void createImage(int width, int height) {
+        transformedImage = image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     }
     
     /**
