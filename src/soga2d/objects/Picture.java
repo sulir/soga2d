@@ -24,6 +24,7 @@
 package soga2d.objects;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import soga2d.GraphicObject;
@@ -34,15 +35,47 @@ import soga2d.GraphicObject;
  */
 public class Picture extends GraphicObject {
     /**
+     * Constructs an empty (transparent) 1x1 px picture at [0, 0].
+     */
+    public Picture() { }
+    
+    /**
+     * Constructs a picture from a file located in the classpath.
+     * 
+     * The width and height is computed automatically. The initial x and y
+     * coorditates are 0.
+     * @param fileName the file to open
+     * @throws IOException when the file could not be loaded
+     */
+    public Picture(String fileName) throws IOException {
+        this(fileName, 0, 0);
+    }
+    
+    /**
+     * Constructs a picture from a file located in the classpath.
+     * 
+     * The width and height is computed automatically.
+     * @param fileName the file to open
+     * @param x the initial x coordinate on a board
+     * @param y the initial y coordinate on a board
+     * @throws IOException when the file could not be loaded
+     */
+    public Picture(String fileName, int x, int y) throws IOException {
+        super(x, y);
+        
+        image = Picture.loadImageFromClasspath(fileName);
+    }
+    
+    /**
      * Constructs a picture from a file.
      * 
      * The width and height is computed automatically. The initial x and y
      * coorditates are 0.
      * @param fileName the file to open
-     * @throws IOException when the file could not be open
+     * @throws IOException when the file could not be loaded
      */
-    public Picture(String fileName) throws IOException {
-        this(fileName, 0, 0);
+    public Picture(File file) throws IOException {
+        this(file, 0, 0);
     }
     
     /**
@@ -52,21 +85,32 @@ public class Picture extends GraphicObject {
      * @param fileName the file to open
      * @param x the initial x coordinate on a board
      * @param y the initial y coordinate on a board
-     * @throws IOException when the file could not be open
+     * @throws IOException when the file could not be loaded
      */
-    public Picture(String fileName, int x, int y) throws IOException {
+    public Picture(File file, int x, int y) throws IOException {
         super(x, y);
         
-        image = Picture.loadImage(fileName);
+        image = ImageIO.read(file);
     }
     
     /**
-     * Helper method - loads the image from this JAR file.
-     * @param path the path including the file name
-     * @return the loaded image
-     * @throws IOException when the image could not be open
+     * Loads the picture from a file and adjusts the size automatically.
+     * @param file the input file
+     * @throws IOException when the file could not be loaded
      */
-    public static BufferedImage loadImage(String path) throws IOException {
-        return ImageIO.read(GraphicObject.class.getClassLoader().getResource(path));
+    public void loadFromFile(File file) throws IOException {
+        beforeChange();
+        image = ImageIO.read(file);
+        afterChange();
+    }
+    
+    /**
+     * Helper method - loads the image from the classpath, e.g. from this JAR file.
+     * @param name the path including the file name
+     * @return the loaded image
+     * @throws IOException when the image could not be loaded
+     */
+    public static BufferedImage loadImageFromClasspath(String name) throws IOException {
+        return ImageIO.read(GraphicObject.class.getClassLoader().getResource(name));
     }
 }

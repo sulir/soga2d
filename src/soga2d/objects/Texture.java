@@ -27,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import soga2d.GraphicObject;
@@ -36,6 +37,15 @@ import soga2d.GraphicObject;
  * @author Matúš Sulír
  */
 public class Texture extends GraphicObject {
+    /**
+     * Constructs an empty (transparent) texture.
+     * @param width the width of the area to fill
+     * @param height the height of the area to fill
+     */
+    public Texture(int width, int height) {
+        super(0, 0, width, height);
+    }
+    
     /**
      * Constructs a texture from an image file, starting from the point [0, 0].
      * @param fileName the image file name
@@ -59,11 +69,32 @@ public class Texture extends GraphicObject {
     public Texture(String fileName, int x, int y, int width, int height) throws IOException {
         super(x, y, width, height);
         
-        BufferedImage loadedImage = ImageIO.read(GraphicObject.class.getClassLoader().getResource(fileName));
-        TexturePaint texturePaint = new TexturePaint(loadedImage, new Rectangle(loadedImage.getWidth(null), loadedImage.getHeight(null)));
+        fill(Picture.loadImageFromClasspath(fileName));
+    }
+    
+    /**
+     * Loads the texture from a file.
+     * @param file the input file.
+     * @throws IOException when the image could not be loaded
+     */
+    public void loadFromFile(File file) throws IOException {
+        fill(ImageIO.read(file));
+    }
+    
+    /**
+     * Fills the internal image with the specified texture image and does
+     * the needed updates.
+     * @param textureImage the texture image
+     */
+    private void fill(BufferedImage textureImage) {
+        beforeChange();
         
-        Graphics2D g = image.createGraphics();
+        TexturePaint texturePaint = new TexturePaint(textureImage, new Rectangle(textureImage.getWidth(), textureImage.getHeight()));
+        Graphics2D g = this.image.createGraphics();
+        
         g.setPaint(texturePaint);
-        g.fill(new Rectangle(width, height));
+        g.fill(new Rectangle(getWidth(), getHeight()));
+        
+        afterChange();
     }
 }

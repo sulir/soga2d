@@ -46,7 +46,8 @@ public class Animation extends GraphicObject {
 
     /**
      * Constructs an animation.
-     *
+     * 
+     * The images are loaded from the classpath.
      * @param interval the time between two frames, in milliseconds
      * @param staticImage the static image to show when the animation is stopped
      * @param images the file names of the animation images
@@ -54,11 +55,11 @@ public class Animation extends GraphicObject {
     public Animation(int interval, String staticImage, String... images) throws IOException {
         this.interval = interval;
         this.frames = new BufferedImage[images.length];
-        this.staticImage = Picture.loadImage(staticImage);
+        this.staticImage = Picture.loadImageFromClasspath(staticImage);
         
         int i = 0;
         for (String fileName : images) {
-            this.frames[i++] = Picture.loadImage(fileName);
+            this.frames[i++] = Picture.loadImageFromClasspath(fileName);
         }
 
         showImage(this.staticImage);
