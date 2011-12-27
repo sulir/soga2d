@@ -75,8 +75,8 @@ public abstract class GraphicObject {
     private KeyListener keyListener;
     private List<Detector> detectors = new ArrayList<Detector>();
     private int angle = 0;
-    
     private List<GraphicObject> subobjects = new ArrayList<GraphicObject>();
+    private boolean dragDropEnabled = false;
     
     /**
      * Constructs an object with x = 0, y = 0, width = 1 and height = 1.
@@ -273,6 +273,34 @@ public abstract class GraphicObject {
      */
     public boolean collidesWith(GraphicObject object) {
         return new CollisionDetector(this, object).objectsCollide();
+    }
+    
+    /**
+     * Finds out whether this graphic object can be automatically dragged and
+     * dropped by a user.
+     * @return true if the object has automatic drag&drop enabled, false otherwise
+     * @see #enableDragDrop()
+     */
+    public boolean isDragDropEnabled() {
+        return dragDropEnabled;
+    }
+    
+    /**
+     * Enables the automatic drag&drop functionality.
+     * 
+     * From now the user will be able to drag and drop this object by mouse
+     * if it is not overlapped by other objects.
+     */
+    public void enableDragDrop() {
+        dragDropEnabled = true;
+    }
+    
+    /**
+     * Disables the automatic drag&drop functionality.
+     * @see #enableDragDrop()
+     */
+    public void disableDragDrop() {
+        dragDropEnabled = false;
     }
     
     /**

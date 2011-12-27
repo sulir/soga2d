@@ -29,6 +29,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import javax.swing.JPanel;
 
 /**
@@ -41,31 +42,45 @@ public class GraphicPanel extends JPanel implements GraphicComponent {
     
     /**
      * The default constructor.
+     * 
+     * Creates a graphic board and registers the necessary events.
      */
     public GraphicPanel() {
         board = new GraphicBoard(this);
         
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                board.mouseClicked(e);
+            public void mouseClicked(MouseEvent event) {
+                board.mouseClicked(event);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent event) {
+                board.mousePressed(event);
+            }
+        });
+        
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent event) {
+                board.mouseDragged(event);
             }
         });
         
         addKeyListener(new KeyListener() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                board.keyEvent(e);
+            public void keyPressed(KeyEvent event) {
+                board.keyEvent(event);
             }
 
             @Override
-            public void keyTyped(KeyEvent e) {
-                board.keyEvent(e);
+            public void keyTyped(KeyEvent event) {
+                board.keyEvent(event);
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {
-                board.keyEvent(e);
+            public void keyReleased(KeyEvent event) {
+                board.keyEvent(event);
             }
         });
     }

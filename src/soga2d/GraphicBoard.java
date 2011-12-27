@@ -24,6 +24,7 @@
 package soga2d;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -43,6 +44,8 @@ public class GraphicBoard {
     private boolean locked = false;
     private KeyListener keyListener;
     private List<Rectangle> dirtyAreas = new ArrayList<Rectangle>();
+    private GraphicObject draggedItem;
+    private Point draggedPoint;
     
     /**
      * Constructs a graphic board bound to the GUI component.
@@ -154,19 +157,26 @@ public class GraphicBoard {
      * @param event the mouse event object
      */
     void mouseClicked(MouseEvent event) {
-        int x = event.getX();
-        int y = event.getY();
-        
-        List<GraphicObject> itemList = allItems();
-        Collections.reverse(itemList);
-        
-        for (GraphicObject object : itemList) {
-            if (x >= object.getX() && x < object.getX() + object.getWidth()
-                    && y >= object.getY() && y < object.getY() + object.getHeight()) {
-                object.mouseClicked();
-                break;
-            }
-        }
+        itemAtPosition(event.getX(), event.getY()).mouseClicked();
+    }
+    
+    /**
+     * Called by the bound component when a mouse press ("mouse down") event
+     * occurred.
+     * @param event the mouse event object
+     */
+    void mousePressed(MouseEvent event) {
+        draggedItem = itemAtPosition(event.getX(), event.getY());
+        draggedPoint = new Point(event.getX() - draggedItem.getX(), event.getY() - draggedItem.getY());
+    }
+    
+    /**
+     * Called by the bound component when a mouse drag event occurred.
+     * @param event the mouse event object
+     */
+    void mouseDragged(MouseEvent event) {
+        if (draggedItem != null && draggedItem.isDragDropEnabled())
+            draggedItem.moveTo(event.getX() - (int) draggedPoint.getX(), event.getY() - (int) draggedPoint.getY());
     }
     
     /**
@@ -215,6 +225,20 @@ public class GraphicBoard {
         
         component.repaint(union);
         dirtyAreas.clear();
+    }
+    
+    private GraphicObject itemAtPosition(int x, int y) {
+        List<GraphicObject> itemList = allItems();
+        Collections.reverse(itemList);
+        
+        for (GraphicObject object : itemList) {
+            if (x >= object.getX() && x < object.getX() + object.getWidth()
+                    && y >= object.getY() && y < object.getY() + object.getHeight()) {
+                return object;
+            }
+        }
+        
+        return null;
     }
     
     /**
