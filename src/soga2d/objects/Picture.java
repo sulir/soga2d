@@ -26,6 +26,7 @@ package soga2d.objects;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import javax.imageio.ImageIO;
 import soga2d.GraphicObject;
 
@@ -63,7 +64,7 @@ public class Picture extends GraphicObject {
     public Picture(String fileName, int x, int y) throws IOException {
         super(x, y);
         
-        image = Picture.loadImageFromClasspath(fileName);
+        image = loadImageFromClasspath(fileName);
     }
     
     /**
@@ -90,7 +91,7 @@ public class Picture extends GraphicObject {
     public Picture(File file, int x, int y) throws IOException {
         super(x, y);
         
-        image = ImageIO.read(file);
+        image = loadImageFromFile(file);
     }
     
     /**
@@ -100,7 +101,7 @@ public class Picture extends GraphicObject {
      */
     public void loadFromFile(File file) throws IOException {
         beforeChange();
-        image = ImageIO.read(file);
+        image = loadImageFromFile(file);
         afterChange();
     }
     
@@ -111,6 +112,26 @@ public class Picture extends GraphicObject {
      * @throws IOException when the image could not be loaded
      */
     public static BufferedImage loadImageFromClasspath(String name) throws IOException {
-        return ImageIO.read(GraphicObject.class.getClassLoader().getResource(name));
+        URL resource = GraphicObject.class.getClassLoader().getResource(name);
+        
+        if (resource != null)
+            return ImageIO.read(resource);
+        else 
+            throw new IOException();
+    }
+    
+    /**
+     * Helper method - loads the image from the specified file.
+     * @param file the file object
+     * @return the loaded image
+     * @throws IOException when the image could not be loaded
+     */
+    public static BufferedImage loadImageFromFile(File file) throws IOException {
+        BufferedImage loadedImage = ImageIO.read(file);
+        
+        if (loadedImage != null)
+            return loadedImage;
+        else
+            throw new IOException();
     }
 }

@@ -29,7 +29,6 @@ import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import soga2d.GraphicObject;
 
 /**
@@ -78,7 +77,7 @@ public class Texture extends GraphicObject {
      * @throws IOException when the image could not be loaded
      */
     public void loadFromFile(File file) throws IOException {
-        fill(ImageIO.read(file));
+        fill(Picture.loadImageFromFile(file));
     }
     
     /**
