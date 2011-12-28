@@ -112,6 +112,23 @@ public class GraphicBoard {
     }
     
     /**
+     * Replaces the object with a new one.
+     * 
+     * The z-index remains the same.
+     * @param oldObject the object to be replaced
+     * @param newObject the new object
+     */
+    public void replaceObject(GraphicObject oldObject, GraphicObject newObject) {
+        int index = items.indexOf(oldObject);
+        
+        if (index != -1) {
+            items.set(index, newObject);
+            oldObject.assignBoard(null);
+            newObject.assignBoard(this);
+        }
+    }
+    
+    /**
      * Removes all objects from the board and clears it.
      */
     public void clear() {

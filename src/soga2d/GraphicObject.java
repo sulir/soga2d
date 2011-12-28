@@ -305,8 +305,9 @@ public abstract class GraphicObject {
     
     /**
      * Returns the current content of the graphic object as an image.
+     * @return the image representation
      */
-    BufferedImage getImage() {
+    public BufferedImage getImage() {
         if (subobjects.isEmpty()) {
             return transformedImage;
         } else {
