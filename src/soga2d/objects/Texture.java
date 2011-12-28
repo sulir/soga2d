@@ -46,29 +46,42 @@ public class Texture extends GraphicObject {
     }
     
     /**
-     * Constructs a texture from an image file, starting from the point [0, 0].
+     * Constructs a texture from an image file in the classpath, starting from
+     * the point [0, 0].
      * @param fileName the image file name
      * @param width the width of the area to fill
      * @param height the height of the area to fill
      * @throws IOException if the image can not be loaded
      */
     public Texture(String fileName, int width, int height) throws IOException {
-        this(fileName, 0, 0, width, height);
+        super(0, 0, width, height);
+        
+        fill(Picture.loadImageFromClasspath(fileName));
     }
     
     /**
-     * Constructs a texture from an image file.
-     * @param fileName the image file name
-     * @param x the starting point x coordinate on the board
-     * @param y the starting point y coordinate on the board
+     * Creates a texture from a file.
+     * @param file the input file
+     * @param width the width of the area to fill 
+     * @param height the height of the area to fill
+     * @throws IOException when the image can not be loaded
+     */
+    public Texture(File file, int width, int height) throws IOException {
+        super(0, 0, width, height);
+        
+        fill(Picture.loadImageFromFile(file));
+    }
+    
+    /**
+     * Creates a texture from a <code>BufferedImage</code> object.
+     * @param image the source image
      * @param width the width of the area to fill
      * @param height the height of the area to fill
-     * @throws IOException if the image can not be loaded
      */
-    public Texture(String fileName, int x, int y, int width, int height) throws IOException {
-        super(x, y, width, height);
+    public Texture(BufferedImage image, int width, int height) {
+        super(0, 0, width, height);
         
-        fill(Picture.loadImageFromClasspath(fileName));
+        fill(image);
     }
     
     /**

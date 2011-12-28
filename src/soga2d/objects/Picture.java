@@ -95,6 +95,14 @@ public class Picture extends GraphicObject {
     }
     
     /**
+     * Creates a picture from a <code>BufferedImage</code> object.
+     * @param image the source image
+     */
+    public Picture(BufferedImage image) {
+        this.image = image;
+    }
+    
+    /**
      * Loads the picture from a file and adjusts the size automatically.
      * @param file the input file
      * @throws IOException when the file could not be loaded
