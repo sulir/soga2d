@@ -77,12 +77,38 @@ public class GraphicBoard {
     }
     
     /**
+     * Adds multiple objects to the board at once.
+     * @param objects the graphic objects to add
+     */
+    public void addObjects(GraphicObject... objects) {
+        lock();
+        
+        for (GraphicObject object : objects)
+            addObject(object);
+            
+        unlock();
+    }
+    
+    /**
      * Removes the object from the board.
      * @param object the graphical object to be removed
      */
     public void removeObject(GraphicObject object) {
         if (items.remove(object))
             object.assignBoard(null);
+    }
+    
+    /**
+     * Removes multiple objects from the board at once.
+     * @param objects the graphic objects to remove
+     */
+    public void removeObjects(GraphicObject... objects) {
+        lock();
+        
+        for (GraphicObject object : objects)
+            removeObject(object);
+            
+        unlock();
     }
     
     /**
@@ -157,7 +183,10 @@ public class GraphicBoard {
      * @param event the mouse event object
      */
     void mouseClicked(MouseEvent event) {
-        itemAtPosition(event.getX(), event.getY()).mouseClicked();
+        GraphicObject selectedObject = itemAtPosition(event.getX(), event.getY());
+        
+        if (selectedObject != null)
+            selectedObject.mouseClicked();
     }
     
     /**
@@ -167,7 +196,9 @@ public class GraphicBoard {
      */
     void mousePressed(MouseEvent event) {
         draggedItem = itemAtPosition(event.getX(), event.getY());
-        draggedPoint = new Point(event.getX() - draggedItem.getX(), event.getY() - draggedItem.getY());
+        
+        if (draggedItem != null)
+            draggedPoint = new Point(event.getX() - draggedItem.getX(), event.getY() - draggedItem.getY());
     }
     
     /**
@@ -227,6 +258,12 @@ public class GraphicBoard {
         dirtyAreas.clear();
     }
     
+    /**
+     * Returns the item located in the foreground at the specified point.
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the graphic object or null if none satisfied the requirements
+     */
     private GraphicObject itemAtPosition(int x, int y) {
         List<GraphicObject> itemList = allItems();
         Collections.reverse(itemList);
