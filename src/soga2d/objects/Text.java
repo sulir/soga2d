@@ -28,9 +28,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.font.FontRenderContext;
-import java.awt.font.LineMetrics;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import soga2d.GraphicObject;
 
@@ -39,9 +36,9 @@ import soga2d.GraphicObject;
  * @author Matúš Sulír
  */
 public class Text extends GraphicObject {
-    String text;
-    Font font;
-    Color color;
+    private String text;
+    private Font font;
+    private Color color;
     
     /**
      * Constructs and empty text.

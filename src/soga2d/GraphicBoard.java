@@ -43,7 +43,7 @@ public class GraphicBoard {
     private List<GraphicObject> items = new ArrayList<GraphicObject>();
     private boolean locked = false;
     private KeyListener keyListener;
-    private List<Rectangle> dirtyAreas = new ArrayList<Rectangle>();
+    private Rectangle dirtyArea = new Rectangle();
     private GraphicObject draggedItem;
     private Point draggedPoint;
     
@@ -61,7 +61,8 @@ public class GraphicBoard {
      */
     void paint(Graphics2D g) {
         for (GraphicObject object : allItems()) {
-            g.drawImage(object.getImage(), object.getX(), object.getY(), null);
+            if (object != null)
+                g.drawImage(object.getImage(), object.getX(), object.getY(), null);
         }
     }
     
@@ -154,7 +155,7 @@ public class GraphicBoard {
      */
     public void unlock() {
         locked = false;
-        repaintDirtyAreas();
+        repaintDirtyArea();
     }
     
     /**
@@ -236,8 +237,10 @@ public class GraphicBoard {
         if (keyListener != null)
             keyListener.onKeyEvent(event);
         
-        for (GraphicObject object : allItems())
-            object.keyEvent(event);
+        for (GraphicObject object : allItems()) {
+            if (object != null)
+                object.keyEvent(event);
+        }
     }
     
     /**
@@ -246,7 +249,7 @@ public class GraphicBoard {
      */
     void repaintArea(Rectangle area) {
         if (locked) {
-            dirtyAreas.add(area);
+            dirtyArea = dirtyArea.union(area);
         } else {
             component.repaint(area);
         }
@@ -261,18 +264,12 @@ public class GraphicBoard {
     }
     
     /**
-     * Repaints all "dirty" areas - the rectangles which were told to be
-     * repainted while the board was locked.
+     * Repaints the union of all "dirty" areas - the rectangles which were told
+     * to be repainted while the board was locked.
      */
-    private void repaintDirtyAreas() {
-        Rectangle union = new Rectangle();
-        
-        for (Rectangle area : dirtyAreas) {
-            union = union.union(area);
-        }
-        
-        component.repaint(union);
-        dirtyAreas.clear();
+    private void repaintDirtyArea() {
+        component.repaint(dirtyArea);
+        dirtyArea = new Rectangle();
     }
     
     /**
@@ -286,7 +283,7 @@ public class GraphicBoard {
         Collections.reverse(itemList);
         
         for (GraphicObject object : itemList) {
-            if (x >= object.getX() && x < object.getX() + object.getWidth()
+            if (object != null && x >= object.getX() && x < object.getX() + object.getWidth()
                     && y >= object.getY() && y < object.getY() + object.getHeight()) {
                 return object;
             }
