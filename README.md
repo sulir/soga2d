@@ -5,7 +5,7 @@ Soga2D is a small Java library providing more object-oriented abstraction over s
 
 Motivation
 ----------
-The majority of 2D graphics libraries offer an interface similar to this: You are given a method (e.g. `onDraw`) with an argument representing the area, called every time the area is going to be redrawn. You can draw pixels, primitives, etc. by calling member methods of this argument, like this.
+The majority of 2D graphics libraries offer an interface similar to this: You are given a method (e.g. `onDraw`) with an argument representing the area, called every time the area is going to be redrawn. You can draw pixels, primitives, etc. by calling member methods of this argument.
 
 If you want to move the rectangle afterwards, during the next redraw you usually clear the whole area and draw it again at a new position. Alternatively, you manually detect and invalidate only the subarea which needs to be updated.
 
