@@ -38,12 +38,12 @@ A "graphic board" represent canvas where all graphical objects can be placed on.
 * modify their relative z-order: send them to the background, foreground or move in front of an another object
 * replace an object by another one while preserving the z-order
 * clear the whole board at once
-* lock the board and thus disable repainting until unlock() is called – this can be used either for efficiency or better user experience
+* lock the board and thus disable repainting until unlock() is called - this can be used either for efficiency or better user experience
 * register a key-press event listener for the board itself
 
 ### Graphic Component
 
-A graphic component bounds a graphic board to a GUI (AWT, Swing,...) component. Currently there is only one implementaion – the graphic panel, which extends JPanel.
+A graphic component bounds a graphic board to a GUI (AWT, Swing,...) component. Currently there is only one implementaion - the graphic panel, which extends JPanel.
 
 ### Graphic Object
 
@@ -52,22 +52,22 @@ Probably the most important class is an abstract class GraphicObject, from which
 * set and get the x and y coordinate, width and height
 * move the object, either absolutely or relatively to the current location
 * rotate it and set the rotation angle
-* set a mouse click listener – the library automatically recognizes when a user clicks on a particular object and sends it a notification
-* register a key-press listener for a particular object – it will be called only when the object is currently on the board
+* set a mouse click listener - the library automatically recognizes when a user clicks on a particular object and sends it a notification
+* register a key-press listener for a particular object - it will be called only when the object is currently on the board
 * enable drag&drop with only one simple method call
 * find out whether this object collides with another using a pixel-perfect collision detection
-* attach a “sub-object” to an object – when an outer object is e.g. moved, the inner object is also moved
+* attach a "sub-object" to an object - when an outer object is e.g. moved, the inner object is also moved
 
-When you change anything, you do not need to worry about repainting and possible interaction with other objects – this is accomplished automatically. In addition, only areas which need to be repainted are redrawn.
+When you change anything, you do not need to worry about repainting and possible interaction with other objects - this is accomplished automatically. In addition, only areas which need to be repainted are redrawn.
 
-Graphic objects also feature per-object double buffering – their content is saved as a bitmap image in memory, so when the object does not change between two repaints, it is only bit-blitted to the screen.
+Graphic objects also feature per-object double buffering - their content is saved as a bitmap image in memory, so when the object does not change between two repaints, it is only bit-blitted to the screen.
 
 ### Detectors
 
-Soga2D uses an interesting concept of a “detector”. It monitors one or more graphical objects (in fact, the objects themselves send notifications to detectors) for any relevant changes and sends a notification to the client when a particular event occurs. At this moment, two detectors are implemented:
+Soga2D uses an interesting concept of a "detector". It monitors one or more graphical objects (in fact, the objects themselves send notifications to detectors) for any relevant changes and sends a notification to the client when a particular event occurs. At this moment, two detectors are implemented:
 
 * collision detector with transparent pixel support
-* proximity detector – can detect when the distance between two graphic object becomes less then specified
+* proximity detector - can detect when the distance between two graphic object becomes less then specified
 
 ### Graphic Object Examples
 
